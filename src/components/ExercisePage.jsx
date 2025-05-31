@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import CodeEditorPage from './CodeEditorPage';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import CodeEditorPage from "./CodeEditorPage";
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  withCredentials: true
+  baseURL: "import.meta.env.VITE_API_URL",
+  withCredentials: true,
 });
 
 // Add response interceptor for token refresh
@@ -20,15 +20,15 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Try to refresh token
-        await axios.get('http://localhost:3000/api/token/refresh-token', {
-          withCredentials: true
+        await axios.get("http://localhost:3000/api/token/refresh-token", {
+          withCredentials: true,
         });
 
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         // If refresh token fails, redirect to login
-        window.location.href = '/';
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }
@@ -48,19 +48,23 @@ const ExercisePage = () => {
     const fetchExercise = async () => {
       try {
         const response = await axiosInstance.get(`/api/exercises/${id}`);
-        
+
         if (response.data.success) {
           setExercise(response.data.exercise);
         } else {
-          throw new Error(response.data.error || 'Failed to fetch exercise');
+          throw new Error(response.data.error || "Failed to fetch exercise");
         }
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching exercise:', err);
+        console.error("Error fetching exercise:", err);
         if (err.response?.status === 401) {
-          navigate('/');
+          navigate("/");
         } else {
-        setError(err.response?.data?.error || err.message || 'Failed to fetch exercise details. Please try again later.');
+          setError(
+            err.response?.data?.error ||
+              err.message ||
+              "Failed to fetch exercise details. Please try again later."
+          );
         }
         setLoading(false);
       }
@@ -78,7 +82,7 @@ const ExercisePage = () => {
   }
 
   if (error || !exercise) {
-    return <div className="error-message">{error || 'Exercise not found'}</div>;
+    return <div className="error-message">{error || "Exercise not found"}</div>;
   }
 
   return (
@@ -170,7 +174,7 @@ const ExercisePage = () => {
         `}
       </style>
 
-      <button className="back-button" onClick={() => navigate('/home')}>
+      <button className="back-button" onClick={() => navigate("/home")}>
         <i className="fas fa-arrow-left"></i>
         Back to Exercises
       </button>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  withCredentials: true
+  baseURL: "import.meta.env.VITE_API_URL",
+  withCredentials: true,
 });
 
 // Add response interceptor for token refresh
@@ -19,15 +19,15 @@ axiosInstance.interceptors.response.use(
 
       try {
         // Try to refresh token
-        await axios.get('http://localhost:3000/api/token/refresh-token', {
-          withCredentials: true
+        await axios.get("http://localhost:3000/api/token/refresh-token", {
+          withCredentials: true,
         });
 
         // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         // If refresh token fails, redirect to login
-        window.location.href = '/';
+        window.location.href = "/";
         return Promise.reject(refreshError);
       }
     }
@@ -47,8 +47,8 @@ const CodingExercises = () => {
     const fetchData = async () => {
       try {
         const [exercisesResponse, progressResponse] = await Promise.all([
-          axiosInstance.get('/api/exercises'),
-          axiosInstance.get('/api/progress')
+          axiosInstance.get("/api/exercises"),
+          axiosInstance.get("/api/progress"),
         ]);
 
         if (exercisesResponse.data.success) {
@@ -58,7 +58,7 @@ const CodingExercises = () => {
         if (progressResponse.data.success) {
           // Convert progress array to an object for easier lookup
           const progressObj = {};
-          progressResponse.data.progress.forEach(item => {
+          progressResponse.data.progress.forEach((item) => {
             progressObj[item.exerciseId] = item;
           });
           setProgress(progressObj);
@@ -66,8 +66,12 @@ const CodingExercises = () => {
 
         setLoading(false);
       } catch (err) {
-        console.error('Error fetching data:', err);
-        setError(err.response?.data?.error || err.message || 'Failed to fetch data. Please try again later.');
+        console.error("Error fetching data:", err);
+        setError(
+          err.response?.data?.error ||
+            err.message ||
+            "Failed to fetch data. Please try again later."
+        );
         setLoading(false);
       }
     };
@@ -266,42 +270,47 @@ const CodingExercises = () => {
       <div className="exercises-header">
         <h2 className="exercises-title">Coding Exercises</h2>
         <p className="exercises-description">
-          Challenge yourself with our curated collection of coding exercises. Master web development one step at a time.
+          Challenge yourself with our curated collection of coding exercises.
+          Master web development one step at a time.
         </p>
       </div>
 
       <div className="exercises-grid">
         {exercises.map((exercise, index) => {
           const exerciseProgress = progress[exercise.id] || null;
-          const completionPercentage = exerciseProgress ? exerciseProgress.completionPercentage : 0;
-          
+          const completionPercentage = exerciseProgress
+            ? exerciseProgress.completionPercentage
+            : 0;
+
           return (
-          <div 
-            key={index} 
-            className="exercise-card"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div>
-              <div className="card-header">
-                <h3 className="card-title">{exercise.title}</h3>
-              </div>
+            <div
+              key={index}
+              className="exercise-card"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div>
+                <div className="card-header">
+                  <h3 className="card-title">{exercise.title}</h3>
+                </div>
                 {exerciseProgress && (
                   <div className="progress-bar">
-                    <div 
-                      className="progress-fill" 
+                    <div
+                      className="progress-fill"
                       style={{ width: `${completionPercentage}%` }}
                     />
                   </div>
                 )}
-              <p className="card-description">{exercise.description}</p>
-            </div>
-            <Link 
-                to={`/exercise/${exercise.id}`} 
-                className={exerciseProgress ? "continue-button" : "start-button"}
-            >
+                <p className="card-description">{exercise.description}</p>
+              </div>
+              <Link
+                to={`/exercise/${exercise.id}`}
+                className={
+                  exerciseProgress ? "continue-button" : "start-button"
+                }
+              >
                 {exerciseProgress ? "Continue Exercise" : "Start Exercise"}
-            </Link>
-          </div>
+              </Link>
+            </div>
           );
         })}
       </div>
@@ -309,4 +318,4 @@ const CodingExercises = () => {
   );
 };
 
-export default CodingExercises; 
+export default CodingExercises;
