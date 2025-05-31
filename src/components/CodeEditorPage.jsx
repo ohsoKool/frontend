@@ -73,9 +73,12 @@ document.querySelector('.container').style.color = 'white';
 
         try {
           // Try to refresh token
-          await axios.get("http://localhost:3000/api/token/refresh-token", {
-            withCredentials: true,
-          });
+          await axios.get(
+            "import.meta.env.VITE_API_URL/api/token/refresh-token",
+            {
+              withCredentials: true,
+            }
+          );
 
           // Retry the original request
           return axiosInstance(originalRequest);
