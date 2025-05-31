@@ -60,15 +60,18 @@ const Auth = () => {
             password: formData.password,
           };
 
-      const response = await fetch(`import.meta.env.VITE_API_URL{endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}{endpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(payload),
+        }
+      );
 
       const data = await response.json();
 
@@ -116,7 +119,7 @@ const Auth = () => {
   const handleTokenRefresh = async () => {
     try {
       const response = await fetch(
-        "import.meta.env.VITE_API_URL/api/token/refresh-token",
+        `${import.meta.env.VITE_API_URL}/api/token/refresh-token`,
         {
           credentials: "include",
         }

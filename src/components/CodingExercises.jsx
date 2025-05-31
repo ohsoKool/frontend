@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "import.meta.env.VITE_API_URL",
+  baseURL: `${import.meta.env.VITE_API_URL}`,
   withCredentials: true,
 });
 
@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
       try {
         // Try to refresh token
         await axios.get(
-          "import.meta.env.VITE_API_URL/api/token/refresh-token",
+          `${import.meta.env.VITE_API_URL}L/api/token/refresh-token`,
           {
             withCredentials: true,
           }

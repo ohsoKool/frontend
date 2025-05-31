@@ -57,7 +57,7 @@ document.querySelector('.container').style.color = 'white';
 
   // Create axios instance with interceptors
   const axiosInstance = axios.create({
-    baseURL: "import.meta.env.VITE_API_URL",
+    baseURL: `${import.meta.env.VITE_API_URL}`,
     withCredentials: true,
   });
 
@@ -74,7 +74,7 @@ document.querySelector('.container').style.color = 'white';
         try {
           // Try to refresh token
           await axios.get(
-            "import.meta.env.VITE_API_URL/api/token/refresh-token",
+            `${import.meta.env.VITE_API_URL}/api/token/refresh-token`,
             {
               withCredentials: true,
             }

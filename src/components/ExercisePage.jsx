@@ -3,34 +3,33 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import CodeEditorPage from "./CodeEditorPage";
 
+// Axios instance with base URL and credentials
 const axiosInstance = axios.create({
-  baseURL: "import.meta.env.VITE_API_URL",
+  baseURL: `${import.meta.env.VITE_API_URL}`,
   withCredentials: true,
 });
 
-// Add response interceptor for token refresh
+// Interceptor for refreshing token
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // If error is 401 and we haven't tried to refresh token yet
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // Try to refresh token
         await axios.get(
-          "import.meta.env.VITE_API_URL/api/token/refresh-token",
+          `${import.meta.env.VITE_API_URL}/api/token/refresh-token`,
           {
             withCredentials: true,
           }
         );
 
-        // Retry the original request
+        // Retry original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        // If refresh token fails, redirect to login
+        // Redirect to login if refresh fails
         window.location.href = "/";
         return Promise.reject(refreshError);
       }
@@ -57,6 +56,7 @@ const ExercisePage = () => {
         } else {
           throw new Error(response.data.error || "Failed to fetch exercise");
         }
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching exercise:", err);
