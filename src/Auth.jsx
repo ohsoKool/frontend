@@ -61,7 +61,7 @@ const Auth = () => {
           };
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}{endpoint}`,
+        `${import.meta.env.VITE_API_URL}${endpoint}`,
         {
           method: "POST",
           headers: {

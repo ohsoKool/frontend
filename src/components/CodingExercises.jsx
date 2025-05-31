@@ -20,7 +20,7 @@ axiosInstance.interceptors.response.use(
       try {
         // Try to refresh token
         await axios.get(
-          `${import.meta.env.VITE_API_URL}L/api/token/refresh-token`,
+          `${import.meta.env.VITE_API_URL}/api/token/refresh-token`,
           {
             withCredentials: true,
           }
